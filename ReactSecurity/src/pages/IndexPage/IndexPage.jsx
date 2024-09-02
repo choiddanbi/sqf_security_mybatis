@@ -85,6 +85,11 @@ const profileImgBox = css`
     width: 64px;
     height: 64px;
     box-shadow: 0px 0px 2px #00000088;
+    cursor: pointer;
+    overflow: hidden;
+    & > img {
+        height: 100%;
+    }
 `;
 
 const profileInfo = css`
@@ -158,8 +163,8 @@ function IndexPage(props) {
                         :
                         <div css={rightBox}>
                             <div css={userInfoBox}>
-                                <div css={profileImgBox}>
-                                    <img src="" alt="" />
+                                <div css={profileImgBox} onClick={() => navigate("/profile")}>
+                                    <img src={userInfoState?.data?.data.img} alt="" />
                                 </div>
                                 <div css={profileInfo}>
                                     <div>

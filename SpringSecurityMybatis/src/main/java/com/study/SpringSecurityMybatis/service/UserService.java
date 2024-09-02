@@ -1,5 +1,6 @@
 package com.study.SpringSecurityMybatis.service;
 
+import com.study.SpringSecurityMybatis.dto.request.ReqProfileImgDto;
 import com.study.SpringSecurityMybatis.dto.request.ReqSigninDto;
 import com.study.SpringSecurityMybatis.dto.request.ReqSignupDto;
 import com.study.SpringSecurityMybatis.dto.response.RespDeleteUserDto;
@@ -17,6 +18,7 @@ import com.study.SpringSecurityMybatis.repository.UserRolesMapper;
 import com.study.SpringSecurityMybatis.security.jwt.JwtProvider;
 import com.study.SpringSecurityMybatis.security.principal.PrincipalUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -35,6 +37,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+
+    // UserService 가 IOC에 등록될 때 .yml 에 있는 걸 가지고 옴 !
+    @Value("${user.profile.img.default}")
+    private String defaultProfileImg;
 
     @Autowired
     private UserMapper userMapper;
@@ -143,8 +149,24 @@ public class UserService {
                 .username(user.getUsername())
                 .name(user.getName())
                 .email(user.getEmail())
+                .img(user.getImg())
                 .roles(roles)
                 .build();
+    }
+
+    public Boolean updatePprofileImg(ReqProfileImgDto dto) {
+        PrincipalUser principalUser =
+                (PrincipalUser) SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+
+        if(dto.getImg() == null || dto.getImg().isBlank()) {
+            userMapper.modifyImgById(principalUser.getId(), defaultProfileImg);
+            return true;
+        }
+        userMapper.modifyImgById(principalUser.getId(), dto.getImg());
+        return true;
     }
 }
 

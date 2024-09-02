@@ -126,13 +126,13 @@ function UserLoginPage(props) {
         localStorage.setItem("accessToken", "Bearer " + signinData.token.accessToken); // 이건 localstorge에 넣어도 instance 에ㅔ 들어있는 header 는 바뀌지 않음
         
         instance.interceptors.request.use(config => {
-            config.headers["Authorization"] = localStorage.getItem("accessToken"); // 기존 config 설정을 최근 토큰으로 수정 ! -> instance 는 처음 한번만 실행되는거라 이걸 꼭 해줘야한다고 ??
+            config.headers["Authorization"] = localStorage.getItem("accessToken"); // 기존 config 설정을 최근 토큰으로 수정 ! -> instance 는 처음 한번만 실행되는거라 이걸 꼭 수동으로 해줘야함
             return config;
         });
 
 
         // window.hisroy = 이전에 페이지이동했떤 page들 기록
-        if(window.history.length > 2) { // redirect가 됐다는 뜻, 탭 열고 바로 프로필로 왔을 경우 ( 로그인 창으로 갔다가 로그인 하면 프로필로 가짐 !! )
+        if(window.history.length > 2) { // redirect가 됐다는 뜻, 탭 열고 바로 프로필로 왔을 경우 ( ex. 로그인 창으로 갔다가 로그인 하면 프로필로 가짐 !! )
             navigate(-1); // 재랜더링 안시켜줄려고 navigate 사용
             return;
         }

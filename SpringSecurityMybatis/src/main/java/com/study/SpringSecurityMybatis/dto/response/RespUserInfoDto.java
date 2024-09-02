@@ -12,5 +12,6 @@ public class RespUserInfoDto {
     private String username;
     private String name;
     private String email;
+    private String img;
     private Set<String> roles;
 }

@@ -20,6 +20,7 @@ public class User {
     private String password;
     private String name;
     private String email;
+    private String img;
     private Set<UserRoles> userRoles; // 이걸 만든 이유 : springboot 에서는 db처럼 조인이 없어서!!
 
     public PrincipalUser toPrincipal() {
