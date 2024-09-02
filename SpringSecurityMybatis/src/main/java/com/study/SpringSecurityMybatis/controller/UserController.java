@@ -22,7 +22,7 @@ public class UserController {
     }
 
 
-    // 저장된 토큰의 id로 getUser , 아직 사용 X
+    // 저장된 토큰의 id로 getUser
     // claims → principalUser → UsernamePasswordAuthenticationToken → SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationToken)
     @GetMapping("/user/me")
     public ResponseEntity<?> getUserMe() {

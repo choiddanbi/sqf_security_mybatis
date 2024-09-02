@@ -9,11 +9,11 @@ import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
 
 /** 
  * 페이지 이동 시 Auth(로그인, 토큰) 확인
- *  1. index(home) 페이지 먼저 들어가서 '로그인 페이지'로 이동한 경우 -> 로그인 후 -> index(home) 으로 이동  
+ *  1. index(home) 페이지 먼저 들어가서 '로그인 페이지'로 이동한 경우 : 로그인 후 -> index(home) 으로 이동  
  *      // history 3개 : 탭 -> 인덱스 -> login
- *  2. 탭을 열자마자 주소창에 수동입력을 통해 '로그인 페이지'로 이동한 경우 -> 로그인 후 -> index(home) 으로 이동 
+ *  2. 탭을 열자마자 주소창에 수동입력을 통해 '로그인 페이지'로 이동한 경우 : 로그인 후 -> index(home) 으로 이동 
  *      // history 2개 : 탭 -> login
- *  3. 로그인을 하지 않고 로그인 해야만 사용 가능한 페이지로 들어갔을 때 '로그인 페이지'로 이동된 경우 -> 로그인 후 -> 이전페이지 ( = 접속하고자 했던 페이지로 이동 )
+ *  3. 로그인을 하지 않고 로그인 해야만 사용 가능한 페이지로 들어갔을 때 '로그인 페이지'로 이동된 경우 : 로그인 후 -> 이전페이지 ( = 접속하고자 했던 페이지로 이동 )
  *      // history 3개 : 탭 -> profile -> login
  *  4. 로그인이 된 상태 -> 어느 페이지든 이동
 */
@@ -37,11 +37,11 @@ function App() {
     // useQuery(["key"], 요청메소드, 객체) --> 선언만 해두면 호출, 실행 없이 최초에 한번은 무조건 실행됨 (useeffect 처럼)
     // 단 enable=false 면 안함
     // useQuery는 자동으로 서버(springboot) 에 요청보내서 정보 가져오는 용도 -> get요청에 주로 사용
-    // use어쩌구.. 못알아들음 -> post, delete, put
+    // useMutation -> post, delete, put
     // 이건 실행이 아닌 정의 - usequery는 실행 그 안에 애들은 정의
 
 
-    // token 을 localStorage 에서 꺼내오는 react-query
+    // token 을 localStorage 에서 꺼내오는 react-query -> localStorage 는 user마다 개별임 ( 즉, localStorage 의 accesstoken 은 하나만 존재 )
     // 로그인 이력 확인, 내 토큰이 사용가능한 토큰인지 확인용
     // 정의
     const accessTokenValid = useQuery(
@@ -71,7 +71,7 @@ function App() {
                 for(let authPath of authPaths) {
                     if(location.pathname.startsWith(authPath)) { // authPaths 로 시작하는 경로 ( /profile 경로로 가면 )
                         //window.location.href=""; // 뒤로가기 됨, location.replace = 뒤로가기 안됨, 
-                        navigate("/user/login"); // navigate 랑 window.location 차이 : navigate (상태유지 o), location.어쩌구 (상태유지x, 완전 새로운 페이지)
+                        navigate("/user/login"); // navigate 랑 window.location 차이 : navigate (상태유지 o, 재랜더링 안됨), location.어쩌구 (상태유지x, 완전 새로운 페이지)
                         break;
                     }
                 }
