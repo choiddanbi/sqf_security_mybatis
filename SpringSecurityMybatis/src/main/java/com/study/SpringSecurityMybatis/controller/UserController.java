@@ -16,12 +16,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // 요청 들어온 id로 getUser
     @GetMapping("/user/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         return ResponseEntity.ok().body(userService.getUserInfo(id));
     }
 
 
+    // 저장된 토큰의 id로 getUser , 아직 사용 X
     // claims → principalUser → UsernamePasswordAuthenticationToken → SecurityContextHolder.getContext().setAuthentication(UsernamePasswordAuthenticationToken)
     @GetMapping("/user/me")
     public ResponseEntity<?> getUserMe() {

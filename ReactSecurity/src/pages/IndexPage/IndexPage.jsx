@@ -109,10 +109,14 @@ const profileInfo = css`
 
 function IndexPage(props) {
     const navigate = useNavigate();
+    // queryClient.invalidateQueries(); // 지금까지의 쿼리를 만료시켜라 ( = 쿼리 다시 동작 )
 
-    const queryClient = useQueryClient();
-    const userInfoState = queryClient.getQueryState("userInfoQuery");
+    const queryClient = useQueryClient(); // accessTokenValidQuery 는 query key값 (App.js 에 있음)
     const accessTokenValidState = queryClient.getQueryState("accessTokenValidQuery");
+    const userInfoState = queryClient.getQueryState("userInfoQuery");
+
+    console.log(accessTokenValidState);
+    console.log(userInfoState);
 
     const handleLoginButtonOnClick = () => {
         navigate("/user/login");
@@ -123,23 +127,35 @@ function IndexPage(props) {
         window.location.replace("/");
     }
 
-    console.log(userInfoState.status);
-    console.log(userInfoState);
+    // console.log(userInfoState.status);
+    // console.log(userInfoState);
+    // accessTokenValidState success 되고 userInfoState 가 요청보냄
 
     return (
         <div css={layout}>
             <header css={header}>
                 <input type="search" placeholder='검색어를 입력해 주세요.'/>
             </header>
-            {
-                accessTokenValidState.status === "idle" || accessTokenValidState.status ===  "loading" 
-                ? <></> 
-                : 
-                <main css={main}>
-                    <div css={leftBox}></div>
+
+            <main css={main}>
+                <div css={leftBox}> </div>
                     {
-                        userInfoState.status === "success" 
+                        accessTokenValidState.status !== "success"
                         ?
+                            accessTokenValidState.status !== "error"
+                            ?
+                            <></> // idle 이거나 loading 중일때 == error 일때
+                            :
+                            <div css={rightBox}>
+                                <p>더 안전하고 편리하게 이용하세요</p>
+                                <button onClick={handleLoginButtonOnClick}>로그인</button>
+                                <div>
+                                    <Link to={"/user/help/id"}>아이디 찾기</Link>
+                                    <Link to={"/user/help/pw"}>비밀번호 찾기</Link>
+                                    <Link to={"/user/join"}>회원가입</Link>
+                                </div>
+                            </div>
+                        :
                         <div css={rightBox}>
                             <div css={userInfoBox}>
                                 <div css={profileImgBox}>
@@ -147,27 +163,15 @@ function IndexPage(props) {
                                 </div>
                                 <div css={profileInfo}>
                                     <div>
-                                        <div>{userInfoState.data.data.username}님</div>
-                                        <div>{userInfoState.data.data.email}</div>
+                                        <div>{userInfoState.data?.data.username}님</div>
+                                        <div>{userInfoState.data?.data.email}</div>
                                     </div>
                                     <button onClick={handleLogoutButtonOnClick}>로그아웃</button>
                                 </div>
                             </div>
                         </div>
-                        :
-                        <div css={rightBox}>
-                            <p>더 안전하고 편리하게 이용하세요</p>
-                            <button onClick={handleLoginButtonOnClick}>로그인</button>
-                            <div>
-                                <Link to={"/user/help/id"}>아이디 찾기</Link>
-                                <Link to={"/user/help/pw"}>비밀번호 찾기</Link>
-                                <Link to={"/user/join"}>회원가입</Link>
-                            </div>
-                        </div>
                     }
-                </main>
-            }
-            
+            </main>
         </div>
     );
 }

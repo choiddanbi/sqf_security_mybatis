@@ -10,6 +10,7 @@ public class ValidException extends RuntimeException {
     @Getter
     private List<FieldError> fieldErrors;
 
+    // 생성자
     public ValidException(String message, List<FieldError> fieldErrors) {
         super(message);
         this.fieldErrors = fieldErrors;

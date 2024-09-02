@@ -1,4 +1,4 @@
-package com.study.SpringSecurity.controller;
+package com.study.SpringSecurity.Controller;
 
 import com.study.SpringSecurity.exception.ValidException;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Set;
 
-@RestControllerAdvice
+@RestControllerAdvice // IOC안에서 터진 예외만 낚아챌 수 있음 EX) dto안에서 터진 예외는 못데려감
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(ValidException.class)
-    public ResponseEntity<?> validException(ValidException e) {
+    public ResponseEntity<?> vaildException(ValidException e) { //
         return ResponseEntity.badRequest().body(e.getFieldErrors());
     }
 
@@ -24,7 +24,7 @@ public class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> badCredentialsException(BadCredentialsException e) {
+    public ResponseEntity<?> BadCredentialsException(BadCredentialsException e) {
         return ResponseEntity.badRequest().body(Set.of(new FieldError("authentication", "authentication", e.getMessage())));
     }
 }

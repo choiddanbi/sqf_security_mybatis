@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.RUNTIME) // 실행중에 적용시키겠따
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface TimeAop {}
+public @interface TimeAop {
+
+}

@@ -1,4 +1,4 @@
-package com.study.SpringSecurity.controller;
+package com.study.SpringSecurity.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,5 +9,4 @@ public class RoleController {
     public ResponseEntity<?> init() {
         return ResponseEntity.ok().body(null);
     }
-
 }

@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { signinApi } from '../../apis/signinApi';
+import { instance } from '../../apis/util/instance';
 /** @jsxImportSource @emotion/react */
 
 const layout = css`
@@ -70,6 +71,8 @@ const loginButton = css`
 `;
 
 function UserLoginPage(props) {
+    const navigate = useNavigate();
+
     const [ inputUser, setInputUser ] = useState({
         username: "",
         password: "",
@@ -105,7 +108,7 @@ function UserLoginPage(props) {
 
     const handleLoginSubmitOnClick = async () => {
         const signinData = await signinApi(inputUser);
-        if(!signinData.isSuceess) {
+        if(!signinData.isSuceess) { // 로그인이 false 일 때
             if(signinData.errorStatus === 'fieldError') {
                 showFieldErrorMessage(signinData.error);
             }
@@ -120,8 +123,21 @@ function UserLoginPage(props) {
             return;
         }
 
-        localStorage.setItem("accessToken", "Bearer " + signinData.token.accessToken);
-        window.location.replace("/");
+        localStorage.setItem("accessToken", "Bearer " + signinData.token.accessToken); // 이건 localstorge에 넣어도 instance 에ㅔ 들어있는 header 는 바뀌지 않음
+        
+        instance.interceptors.request.use(config => {
+            config.headers["Authorization"] = localStorage.getItem("accessToken"); // 기존 config 설정을 최근 토큰으로 수정 ! -> instance 는 처음 한번만 실행되는거라 이걸 꼭 해줘야한다고 ??
+            return config;
+        });
+
+
+        // window.hisroy = 이전에 페이지이동했떤 page들 기록
+        if(window.history.length > 2) { // redirect가 됐다는 뜻, 탭 열고 바로 프로필로 왔을 경우 ( 로그인 창으로 갔다가 로그인 하면 프로필로 가짐 !! )
+            navigate(-1); // 재랜더링 안시켜줄려고 navigate 사용
+            return;
+        }
+        navigate("/");// navigate 를 안쓰고 widow를 쓴 이유는 instance 의 token을 바꿔주러ㅕ고, 창 열자마자 로그인으로 들어갔을 경우, 
+        // console.log(response);
     }
 
     return (
