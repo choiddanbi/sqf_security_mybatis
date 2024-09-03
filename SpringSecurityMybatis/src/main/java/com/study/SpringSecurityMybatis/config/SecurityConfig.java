@@ -2,7 +2,9 @@ package com.study.SpringSecurityMybatis.config;
 
 import com.study.SpringSecurityMybatis.security.filter.JwtAccessTokenFilter;
 import com.study.SpringSecurityMybatis.security.handler.AuthenticationHandler;
+import com.study.SpringSecurityMybatis.security.handler.Oauth2SuccessHandler;
 import com.study.SpringSecurityMybatis.security.jwt.JwtProvider;
+import com.study.SpringSecurityMybatis.service.OAuth2Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
@@ -21,11 +24,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAccessTokenFilter jwtAccessTokenFilter;
     @Autowired
     private AuthenticationHandler authenticationHandler;
+    @Autowired
+    private Oauth2SuccessHandler oauth2SuccessHandler;
+    @Autowired
+    private OAuth2Service oAuth2Service;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -35,6 +44,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable(); // h2-console 접속용
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션저장소 사용 안함
         http.cors(); // 서버가 달라고 응답 주고받겠다 -> WebMvcConfig 설정 따라감
+
+        http.oauth2Login()
+                        .successHandler(oauth2SuccessHandler)
+                        .userInfoEndpoint() // 로그인을 하면 얘가 동작해서 user정보를 userService 에 담아줌 ??
+                        .userService(oAuth2Service);
+
         http.exceptionHandling().authenticationEntryPoint(authenticationHandler); // 인증 관련 된 예외가 터지면 authenticationHandler 한테 던지겠다
 
         http.authorizeRequests()
