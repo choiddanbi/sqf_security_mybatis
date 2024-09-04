@@ -49,7 +49,7 @@ function UserProfilePage(props) {
 
     const handleImageOnChange = () => {
         if(window.confirm("프로필 사진을 변경하시겠습니까 ?")) {
-            coneElement("input"); // dom객체 생성
+            const fileInput = document.createElement("input"); // dom객체 생성
             fileInput.setAttribute("type", "file"); // input 속성을 file 로 변경
             fileInput.setAttribute("accept", "image/*"); // 이미지 외에는 업로드 못하게
             fileInput.click();
@@ -63,8 +63,7 @@ function UserProfilePage(props) {
 
 
                 // uuid 사용 이유 - 사용자마다 같은 이미지를 사용하더라도 겹치지 않게 하기위해서?
-                // firebase의 storage 에 uuid_img.name 으로 업로드하겠다 
-                const storageRef = ref(storage, `user/profile/${uuid()}_${profileImage.name}`);
+                const storageRef = ref(storage, `user/profile/${uuid()}_${profileImage.name}`); // firebase storage 에 접근하겠ㄸ따!
                 const uploadTask = uploadBytesResumable(storageRef, profileImage);
                 uploadTask.on(
                     "state_changed", // 업로드 중.. 이벤트명

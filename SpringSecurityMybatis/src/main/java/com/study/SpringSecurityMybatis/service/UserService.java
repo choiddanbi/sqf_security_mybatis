@@ -104,11 +104,11 @@ public class UserService {
         User user = userMapper.findByUsername(username);
 
         if(user == null) {
-            throw new UsernameNotFoundException("사용장 정보를 다시 확인하세요.");
+            throw new UsernameNotFoundException("사용자 정보를 다시 확인하세요.");
         }
 
         if(!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException("사용장 정보를 다시 확인하세요.");
+            throw new BadCredentialsException("사용자 정보를 다시 확인하세요.");
         }
 
         return user;

@@ -8,6 +8,12 @@
 
     <insert id="save">
         insert into oauth2_user
-        values(default, #{user_id}, #{oAuth2Name}, #{provider})
+        values(default, #{userId}, #{oAuth2Name}, #{provider})
     </insert>
+
+    <insert id="submitsave">
+        insert into oauth2_user
+        values(default, #{userId}, #{username}, #{password}, #{name}, #{email}, #{oAuth2Name}, #{provider}
+    </insert>
+
 </mapper>

@@ -29,10 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2Service oAuth2Service;
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
 
 
 
@@ -47,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.oauth2Login()
                         .successHandler(oauth2SuccessHandler)
-                        .userInfoEndpoint() // 로그인을 하면 얘가 동작해서 user정보를 userService 에 담아줌 ??
+                        .userInfoEndpoint() // 구글 로그인을 하면 얘가 동작해서 구글에서 받아온 user 정보를 가지고 OAuth2UserRequest 생성 ( 토큰이랑 provider 정보 담고있음 ) -> OAuth2Service
                         .userService(oAuth2Service);
 
         http.exceptionHandling().authenticationEntryPoint(authenticationHandler); // 인증 관련 된 예외가 터지면 authenticationHandler 한테 던지겠다
